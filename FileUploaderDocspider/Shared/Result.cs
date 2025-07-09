@@ -1,27 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace FileUploaderDocspider.Shared
 {
-    public class Result
+    public class Result<T>
     {
-        public T? Data { get; }
+        public T Data { get; }
         public bool IsSuccess { get; }
-        public string Message { get; } = string.Empty;
+        public string Message { get; }
 
         public Result()
         {
         }
 
-        public Result(T? data, bool isSuccess)
+        public Result(T data, bool isSuccess)
         {
             Data = data;
             IsSuccess = isSuccess;
         }
 
-        public Result(T? data, bool isSuccess, string message)
+        public Result(T data, bool isSuccess, string message)
         {
             Data = data;
             IsSuccess = isSuccess;
