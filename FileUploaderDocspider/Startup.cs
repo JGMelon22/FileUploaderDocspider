@@ -1,5 +1,6 @@
 using FileUploaderDocspider.Infrastructure.Data;
 using FileUploaderDocspider.Infrastructure.Repository;
+using FileUploaderDocspider.Infrastructure.Services;
 using FileUploaderDocspider.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,7 @@ namespace FileUploaderDocspider
                 options.UseNpgsql(Configuration.GetConnectionString("Default")));
 
             services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddScoped<IDocumentService, DocumentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
