@@ -1,4 +1,5 @@
 ﻿using FileUploaderDocspider.Models;
+using FileUploaderDocspider.Shared;
 using FileUploaderDocspider.ViewModels;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -8,11 +9,12 @@ namespace FileUploaderDocspider.Interfaces
 {
     public interface IDocumentService
     {
-        Task<IEnumerable<Document>> GetAllDocumentsAsync();
-        Task<Document> GetDocumentByIdAsync(int id);
-        Task<(bool Success, string Message)> CreateDocumentAsync(DocumentViewModel model);
-        Task<(bool Success, string Message)> UpdateDocumentAsync(DocumentEditViewModel model);
-        Task<(bool Success, string Message)> DeleteDocumentAsync(int id);
-        bool ValidateFileAsync(IFormFile file);
+
+        Task<Result<IEnumerable<Document>>> GetAllDocumentsAsync();
+        Task<Result<Document>> GetDocumentByIdAsync(int id);
+        Task<Result<Document>> CreateDocumentAsync(DocumentViewModel model);
+        Task<Result<Document>> UpdateDocumentAsync(DocumentEditViewModel model);
+        Task<Result<bool>> DeleteDocumentAsync(int id);
+        Result<bool> ValidateFileAsync(IFormFile file);
     }
 }

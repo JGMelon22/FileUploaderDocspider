@@ -1,6 +1,7 @@
 ﻿using FileUploaderDocspider.Interfaces;
 using FileUploaderDocspider.Models;
 using FileUploaderDocspider.ViewModels;
+using FileUploaderDocspider.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -23,110 +24,158 @@ namespace FileUploaderDocspider.Infrastructure.Services
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IEnumerable<Document>> GetAllDocumentsAsync()
+        public async Task<Result<IEnumerable<Document>>> GetAllDocumentsAsync()
         {
-            return await _documentRepository.GetAllAsync();
+            try
+            {
+                var documents = await _documentRepository.GetAllAsync();
+                return Result<IEnumerable<Document>>.Success(documents);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<Document>>.Failure($"Erro ao buscar documentos: {ex.Message}");
+            }
         }
 
-        public async Task<Document> GetDocumentByIdAsync(int id)
+        public async Task<Result<Document>> GetDocumentByIdAsync(int id)
         {
-            return await _documentRepository.GetByIdAsync(id);
-        }
-
-        public async Task<(bool Success, string Message)> CreateDocumentAsync(DocumentViewModel model)
-        {
-            // Validar título único
-            if (await _documentRepository.ExistsByTitleAsync(model.Title))
+            try
             {
-                return (false, "Já existe um documento com este título.");
-            }
-
-            // Validar arquivo
-            if (!ValidateFileAsync(model.File))
-            {
-                return (false, "Tipo de arquivo não permitido. Arquivos .exe, .zip e .bat não são aceitos.");
-            }
-
-            // Salvar arquivo
-            var fileName = await SaveFileAsync(model.File);
-
-            var document = new Document
-            {
-                Title = model.Title,
-                Description = model.Description,
-                FileName = model.FileName ?? model.File.FileName,
-                FilePath = fileName,
-                FileSize = model.File.Length,
-                ContentType = model.File.ContentType,
-                CreatedAt = DateTime.Now
-            };
-
-            await _documentRepository.CreateAsync(document);
-            return (true, "Documento criado com sucesso!");
-        }
-
-        public async Task<(bool Success, string Message)> UpdateDocumentAsync(DocumentEditViewModel model)
-        {
-            var document = await _documentRepository.GetByIdAsync(model.Id);
-            if (document == null)
-            {
-                return (false, "Documento não encontrado.");
-            }
-
-            // Validar título único (excluindo o documento atual)
-            if (await _documentRepository.ExistsByTitleAsync(model.Title, model.Id))
-            {
-                return (false, "Já existe um documento com este título.");
-            }
-
-            document.Title = model.Title;
-            document.Description = model.Description;
-            document.FileName = model.FileName;
-
-            // Se um novo arquivo foi enviado
-            if (model.File != null)
-            {
-                if (!ValidateFileAsync(model.File))
+                var document = await _documentRepository.GetByIdAsync(id);
+                if (document == null)
                 {
-                    return (false, "Tipo de arquivo não permitido. Arquivos .exe, .zip e .bat não são aceitos.");
+                    return Result<Document>.Failure("Documento não encontrado.");
+                }
+                return Result<Document>.Success(document);
+            }
+            catch (Exception ex)
+            {
+                return Result<Document>.Failure($"Erro ao buscar documento: {ex.Message}");
+            }
+        }
+
+        public async Task<Result<Document>> CreateDocumentAsync(DocumentViewModel model)
+        {
+            try
+            {
+                // Validar título único
+                if (await _documentRepository.ExistsByTitleAsync(model.Title))
+                {
+                    return Result<Document>.Failure("Já existe um documento com este título.");
                 }
 
-                // Deletar arquivo antigo
+                // Validar arquivo
+                var validationResult = ValidateFileAsync(model.File);
+                if (!validationResult.IsSuccess)
+                {
+                    return Result<Document>.Failure(validationResult.Message);
+                }
+
+                // Salvar arquivo
+                var fileName = await SaveFileAsync(model.File);
+
+                var document = new Document
+                {
+                    Title = model.Title,
+                    Description = model.Description,
+                    FileName = model.FileName ?? model.File.FileName,
+                    FilePath = fileName,
+                    FileSize = model.File.Length,
+                    ContentType = model.File.ContentType,
+                    CreatedAt = DateTime.Now
+                };
+
+                var createdDocument = await _documentRepository.CreateAsync(document);
+                return Result<Document>.Success(createdDocument);
+            }
+            catch (Exception ex)
+            {
+                return Result<Document>.Failure($"Erro ao criar documento: {ex.Message}");
+            }
+        }
+
+        public async Task<Result<Document>> UpdateDocumentAsync(DocumentEditViewModel model)
+        {
+            try
+            {
+                var document = await _documentRepository.GetByIdAsync(model.Id);
+                if (document == null)
+                {
+                    return Result<Document>.Failure("Documento não encontrado.");
+                }
+
+                // Validar título único (excluindo o documento atual)
+                if (await _documentRepository.ExistsByTitleAsync(model.Title, model.Id))
+                {
+                    return Result<Document>.Failure("Já existe um documento com este título.");
+                }
+
+                document.Title = model.Title;
+                document.Description = model.Description;
+                document.FileName = model.FileName;
+
+                // Se um novo arquivo foi enviado
+                if (model.File != null)
+                {
+                    var validationResult = ValidateFileAsync(model.File);
+                    if (!validationResult.IsSuccess)
+                    {
+                        return Result<Document>.Failure(validationResult.Message);
+                    }
+
+                    // Deletar arquivo antigo
+                    DeleteFile(document.FilePath);
+
+                    // Salvar novo arquivo
+                    var fileName = await SaveFileAsync(model.File);
+                    document.FilePath = fileName;
+                    document.FileSize = model.File.Length;
+                    document.ContentType = model.File.ContentType;
+                }
+
+                var updatedDocument = await _documentRepository.UpdateAsync(document);
+                return Result<Document>.Success(updatedDocument);
+            }
+            catch (Exception ex)
+            {
+                return Result<Document>.Failure($"Erro ao atualizar documento: {ex.Message}");
+            }
+        }
+
+        public async Task<Result<bool>> DeleteDocumentAsync(int id)
+        {
+            try
+            {
+                var document = await _documentRepository.GetByIdAsync(id);
+                if (document == null)
+                {
+                    return Result<bool>.Failure("Documento não encontrado.");
+                }
+
+                // Deletar arquivo físico
                 DeleteFile(document.FilePath);
 
-                // Salvar novo arquivo
-                var fileName = await SaveFileAsync(model.File);
-                document.FilePath = fileName;
-                document.FileSize = model.File.Length;
-                document.ContentType = model.File.ContentType;
+                var deleted = await _documentRepository.DeleteAsync(id);
+                return Result<bool>.Success(deleted);
             }
-
-            await _documentRepository.UpdateAsync(document);
-            return (true, "Documento atualizado com sucesso!");
-        }
-
-        public async Task<(bool Success, string Message)> DeleteDocumentAsync(int id)
-        {
-            var document = await _documentRepository.GetByIdAsync(id);
-            if (document == null)
+            catch (Exception ex)
             {
-                return (false, "Documento não encontrado.");
+                return Result<bool>.Failure($"Erro ao excluir documento: {ex.Message}");
             }
-
-            // Deletar arquivo físico
-            DeleteFile(document.FilePath);
-
-            await _documentRepository.DeleteAsync(id);
-            return (true, "Documento excluído com sucesso!");
         }
 
-        public bool ValidateFileAsync(IFormFile file)
+        public Result<bool> ValidateFileAsync(IFormFile file)
         {
             if (file == null || file.Length == 0)
-                return false;
+                return Result<bool>.Failure("Arquivo é obrigatório.");
 
             var extension = Path.GetExtension(file.FileName).ToLower();
-            return !_blockedExtensions.Contains(extension);
+            if (_blockedExtensions.Contains(extension))
+            {
+                return Result<bool>.Failure("Tipo de arquivo não permitido. Arquivos .exe, .zip e .bat não são aceitos.");
+            }
+
+            return Result<bool>.Success(true);
         }
 
         private async Task<string> SaveFileAsync(IFormFile file)
