@@ -1,6 +1,6 @@
-﻿using FileUploaderDocspider.Models;
+﻿using FileUploaderDocspider.Dtos.Requests;
+using FileUploaderDocspider.Dtos.Responses;
 using FileUploaderDocspider.Shared;
-using FileUploaderDocspider.ViewModels;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,10 +10,10 @@ namespace FileUploaderDocspider.Interfaces
     public interface IDocumentService
     {
 
-        Task<Result<IEnumerable<Document>>> GetAllDocumentsAsync();
-        Task<Result<Document>> GetDocumentByIdAsync(int id);
-        Task<Result<Document>> CreateDocumentAsync(DocumentViewModel model);
-        Task<Result<Document>> UpdateDocumentAsync(DocumentEditViewModel model);
+        Task<Result<IEnumerable<DocumentResponse>>> GetAllDocumentsAsync();
+        Task<Result<DocumentResponse>> GetDocumentByIdAsync(int id);
+        Task<Result<DocumentResponse>> CreateDocumentAsync(DocumentRequest request, IFormFile file);
+        Task<Result<DocumentResponse>> UpdateDocumentAsync(int id, DocumentRequest request, IFormFile file);
         Task<Result<bool>> DeleteDocumentAsync(int id);
         Result<bool> ValidateFileAsync(IFormFile file);
     }
