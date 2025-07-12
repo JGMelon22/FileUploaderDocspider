@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FileUploaderDocspider.Application
+﻿namespace FileUploaderDocspider.Application
 {
     public class Class1
     {
