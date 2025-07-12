@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FileUploaderDocspider.Application.Commands;
+using FileUploaderDocspider.Application.Queries;
+using FileUploaderDocspider.Core.Domains.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using NetDevPack.SimpleMediator;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using FileUploaderDocspider.Application.Queries;
-using FileUploaderDocspider.Application.Commands;
-using FileUploaderDocspider.Core.Domains.ViewModels;
 
 namespace FileUploaderDocspider.Controllers
 {
