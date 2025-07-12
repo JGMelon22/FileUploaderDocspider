@@ -1,4 +1,4 @@
-﻿using FileUploaderDocspider.Models;
+﻿using FileUploaderDocspider.Core.Domains.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;

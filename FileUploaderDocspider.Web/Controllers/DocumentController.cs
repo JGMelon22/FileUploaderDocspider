@@ -1,19 +1,21 @@
-﻿using FileUploaderDocspider.Interfaces;
-using FileUploaderDocspider.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using NetDevPack.SimpleMediator;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using FileUploaderDocspider.Application.Queries;
+using FileUploaderDocspider.Application.Commands;
+using FileUploaderDocspider.Core.Domains.ViewModels;
 
 namespace FileUploaderDocspider.Controllers
 {
     public class DocumentController : Controller
     {
-        private readonly IDocumentService _documentService;
+        private readonly IMediator _mediator;
 
-        public DocumentController(IDocumentService documentService)
+        public DocumentController(IMediator mediator)
         {
-            _documentService = documentService;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -22,7 +24,7 @@ namespace FileUploaderDocspider.Controllers
         /// <returns>The document list view.</returns>
         public async Task<IActionResult> Index()
         {
-            var result = await _documentService.GetAllDocumentsAsync();
+            var result = await _mediator.Send(new GetAllDocumentsQuery());
             if (!result.IsSuccess)
             {
                 TempData["Error"] = result.Message;
@@ -38,12 +40,11 @@ namespace FileUploaderDocspider.Controllers
         /// <returns>The details view or NotFound if not found.</returns>
         public async Task<IActionResult> Details(int id)
         {
-            var result = await _documentService.GetDocumentByIdAsync(id);
+            var result = await _mediator.Send(new GetDocumentByIdQuery(id));
             if (!result.IsSuccess || result.Data == null)
             {
                 return NotFound();
             }
-
             return View(result.Data);
         }
 
@@ -67,16 +68,14 @@ namespace FileUploaderDocspider.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _documentService.CreateDocumentAsync(model);
+                var result = await _mediator.Send(new CreateDocumentCommand(model));
                 if (result.IsSuccess)
                 {
                     TempData["Success"] = "Document created successfully!";
                     return RedirectToAction(nameof(Index));
                 }
-
                 ModelState.AddModelError("", result.Message);
             }
-
             return View(model);
         }
 
@@ -87,12 +86,11 @@ namespace FileUploaderDocspider.Controllers
         /// <returns>The edit view or NotFound if not found.</returns>
         public async Task<IActionResult> Edit(int id)
         {
-            var result = await _documentService.GetDocumentByIdAsync(id);
+            var result = await _mediator.Send(new GetDocumentByIdQuery(id));
             if (!result.IsSuccess || result.Data == null)
             {
                 return NotFound();
             }
-
             var document = result.Data;
             var model = new DocumentEditViewModel
             {
@@ -103,7 +101,6 @@ namespace FileUploaderDocspider.Controllers
                 ExistingFilePath = document.FilePath,
                 CreatedAt = document.CreatedAt
             };
-
             return View(model);
         }
 
@@ -118,16 +115,14 @@ namespace FileUploaderDocspider.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _documentService.UpdateDocumentAsync(model);
+                var result = await _mediator.Send(new UpdateDocumentCommand(model.Id, model));
                 if (result.IsSuccess)
                 {
                     TempData["Success"] = "Document updated successfully!";
                     return RedirectToAction(nameof(Index));
                 }
-
                 ModelState.AddModelError("", result.Message);
             }
-
             return View(model);
         }
 
@@ -140,7 +135,7 @@ namespace FileUploaderDocspider.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _documentService.DeleteDocumentAsync(id);
+            var result = await _mediator.Send(new DeleteDocumentCommand(id));
             if (result.IsSuccess)
             {
                 TempData["Success"] = "Document deleted successfully!";
@@ -149,7 +144,6 @@ namespace FileUploaderDocspider.Controllers
             {
                 TempData["Error"] = result.Message;
             }
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -160,19 +154,17 @@ namespace FileUploaderDocspider.Controllers
         /// <returns>The file for download or NotFound if not found.</returns>
         public async Task<IActionResult> Download(int id)
         {
-            var result = await _documentService.GetDocumentByIdAsync(id);
+            var result = await _mediator.Send(new GetDocumentByIdQuery(id));
             if (!result.IsSuccess || result.Data == null)
             {
                 return NotFound();
             }
-
             var document = result.Data;
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", document.FilePath);
             if (!System.IO.File.Exists(filePath))
             {
                 return NotFound();
             }
-
             var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
             return File(fileBytes, document.ContentType, document.FileName);
         }
