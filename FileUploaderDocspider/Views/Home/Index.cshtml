@@ -1,8 +1,132 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="hero-section bg-primary text-white rounded p-5 mb-5">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 font-weight-bold">Docspider</h1>
+                        <p class="lead">Sistema completo de gerenciamento de documentos</p>
+                        <p class="lead">Organize, armazene e gerencie seus documentos de forma simples e eficiente.</p>
+                        <a href="@Url.Action("Index", "Document")" class="btn btn-light btn-lg">
+                            <i class="fas fa-file-upload mr-2"></i>
+                            Começar Agora
+                        </a>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-file-alt" style="font-size: 8rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Funcionalidades</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-upload text-primary mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="card-title">Upload Seguro</h5>
+                    <p class="card-text">Faça upload de seus documentos com segurança. Bloqueamos automaticamente arquivos perigosos (.exe, .zip, .bat).</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-search text-success mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="card-title">Fácil Localização</h5>
+                    <p class="card-text">Encontre seus documentos rapidamente com nossa interface intuitiva e organizada.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-edit text-warning mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="card-title">Edição Completa</h5>
+                    <p class="card-text">Edite informações dos documentos, substitua arquivos e mantenha tudo sempre atualizado.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Tecnologias Utilizadas</h2>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-server mr-2"></i>Backend</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success mr-2"></i>
+                            <strong>ASP.NET Core 3.1</strong> - Framework web moderno
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success mr-2"></i>
+                            <strong>Entity Framework Core</strong> - ORM para acesso a dados
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success mr-2"></i>
+                            <strong>PostgreSQL</strong> - Banco de dados robusto
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success mr-2"></i>
+                            <strong>Repository Pattern</strong> - Padrão de arquitetura
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-desktop mr-2"></i>Frontend</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success mr-2"></i>
+                            <strong>Bootstrap 4</strong> - Framework CSS responsivo
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success mr-2"></i>
+                            <strong>jQuery</strong> - Biblioteca JavaScript
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success mr-2"></i>
+                            <strong>Font Awesome</strong> - Ícones modernos
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success mr-2"></i>
+                            <strong>Design Responsivo</strong> - Mobile-first
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-light rounded p-4 text-center">
+                <h3 class="mb-3">Pronto para começar?</h3>
+                <p class="text-muted">Gerencie seus documentos de forma profissional e segura.</p>
+                <a href="@Url.Action("Index", "Document")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-arrow-right mr-2"></i>
+                    Acessar Meus Documentos
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
