@@ -1,0 +1,116 @@
+﻿@using FileUploaderDocspider.ViewModels
+
+@model DocumentEditViewModel
+@{
+    ViewData["Title"] = "Editar Documento";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-edit mr-2"></i>Editar Documento
+                </h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" enctype="multipart/form-data">
+                    <input asp-for="Id" type="hidden" />
+                    <input asp-for="ExistingFilePath" type="hidden" />
+                    <input asp-for="CreatedAt" type="hidden" />
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Título *</label>
+                        <input asp-for="Title" class="form-control" maxlength="100" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Descrição</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" maxlength="2000"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <div class="form-text">Máximo 2000 caracteres</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FileName" class="form-label">Nome do Arquivo *</label>
+                        <input asp-for="FileName" class="form-control" />
+                        <span asp-validation-for="FileName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="File" class="form-label">Novo Arquivo (opcional)</label>
+                        <input asp-for="File" type="file" class="form-control" />
+                        <span asp-validation-for="File" class="text-danger"></span>
+                        <div class="form-text">Deixe em branco para manter o arquivo atual. Arquivos .exe, .zip e .bat não são permitidos</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Criado em: @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                        </small>
+                    </div>
+
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary mr-2">
+                            <i class="fas fa-save mr-2"></i>Salvar Alterações
+                        </button>
+                        <a href="@Url.Action("Download", new { id = Model.Id })" class="btn btn-success mr-2">
+                            <i class="fas fa-download mr-2"></i>Download
+                        </a>
+                        <button type="button" class="btn btn-danger mr-2" onclick="deleteDocument(@Model.Id)">
+                            <i class="fas fa-trash mr-2"></i>Excluir
+                        </button>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir este documento? Esta ação não pode ser desfeita.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteDocument(id) {
+            $('#deleteForm').attr('action', '@Url.Action("Delete")/' + id);
+            $('#deleteModal').modal('show');
+        }
+
+        $(document).ready(function() {
+            // Auto-fill filename when file is selected
+            $('input[type="file"]').on('change', function() {
+                var fileName = $(this).val().split('\\').pop();
+                if (fileName) {
+                    $('#FileName').val(fileName);
+                }
+            });
+        });
+    </script>
+}
