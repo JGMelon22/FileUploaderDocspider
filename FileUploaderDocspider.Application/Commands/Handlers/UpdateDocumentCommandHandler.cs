@@ -62,7 +62,9 @@ namespace FileUploaderDocspider.Application.Commands.Handlers
                     _logger.LogInformation("Old file deleted for document: {DocumentId}", request.Model.Id);
 
                     var fileName = await _documentService.SaveFileAsync(request.Model.File);
-                    document.FileName = request.Model.File.FileName;
+                    document.FileName = string.IsNullOrWhiteSpace(request.Model.Title)
+                        ? request.Model.File.FileName
+                        : request.Model.Title;
                     document.FilePath = fileName;
                     document.FileSize = request.Model.File.Length;
                     document.ContentType = request.Model.File.ContentType;

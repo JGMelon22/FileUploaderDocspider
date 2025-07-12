@@ -46,7 +46,6 @@ namespace FileUploaderDocspider.Application.Commands.Handlers
                 var fileName = await _documentService.SaveFileAsync(request.Model.File);
 
                 var document = request.Model.ToDomain();
-                document.FileName = request.Model.File.FileName;
                 document.FilePath = fileName;
                 document.FileSize = request.Model.File.Length;
                 document.ContentType = request.Model.File.ContentType;
