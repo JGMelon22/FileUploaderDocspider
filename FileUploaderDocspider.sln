@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploaderDocspider.Application.UnitTests", "FileUploaderDocspider.Application.UnitTests\FileUploaderDocspider.Application.UnitTests.csproj", "{4B5902D7-C69E-4526-821E-4D5C53DEAB7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploaderDocspider.Web.UnitTests", "FileUploaderDocspider.Web.UnitTests\FileUploaderDocspider.Web.UnitTests.csproj", "{F9307EE9-A553-46BD-894F-CF86D0C3CEDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{4B5902D7-C69E-4526-821E-4D5C53DEAB7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B5902D7-C69E-4526-821E-4D5C53DEAB7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B5902D7-C69E-4526-821E-4D5C53DEAB7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9307EE9-A553-46BD-894F-CF86D0C3CEDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9307EE9-A553-46BD-894F-CF86D0C3CEDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9307EE9-A553-46BD-894F-CF86D0C3CEDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9307EE9-A553-46BD-894F-CF86D0C3CEDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 		{1807D024-68BE-46B5-8881-8FC372E892E4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{83CBBF1D-A8F5-42B3-AABC-7EC5F542F4D2} = {CC3E79E7-B6ED-4C20-A430-23B155EDC0A2}
 		{4B5902D7-C69E-4526-821E-4D5C53DEAB7B} = {83CBBF1D-A8F5-42B3-AABC-7EC5F542F4D2}
+		{F9307EE9-A553-46BD-894F-CF86D0C3CEDC} = {83CBBF1D-A8F5-42B3-AABC-7EC5F542F4D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {82658C5C-52D5-4862-9745-5D14D40C11AF}
