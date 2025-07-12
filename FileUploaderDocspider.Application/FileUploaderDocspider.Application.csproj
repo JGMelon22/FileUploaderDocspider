@@ -9,12 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Handlers\" />
-    <Folder Include="Queries\Handlers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FileUploaderDocspider.Core\FileUploaderDocspider.Core.csproj" />
+    <ProjectReference Include="..\FileUploaderDocspider.Infrastructure\FileUploaderDocspider.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
