@@ -13,7 +13,9 @@ namespace FileUploaderDocspider.Mappings
             {
                 Title = viewModel.Title,
                 Description = viewModel.Description,
-                FileName = viewModel.File?.FileName,
+                FileName = string.IsNullOrWhiteSpace(viewModel.FileName)
+                    ? viewModel.File?.FileName
+                    : viewModel.FileName,
                 CreatedAt = DateTime.Now
             };
 
@@ -37,6 +39,9 @@ namespace FileUploaderDocspider.Mappings
         {
             document.Title = viewModel.Title;
             document.Description = viewModel.Description;
+            document.FileName = string.IsNullOrWhiteSpace(viewModel.FileName)
+                ? document.FileName
+                : viewModel.FileName;
             return document;
         }
     }
