@@ -1,6 +1,5 @@
-﻿using FileUploaderDocspider.Dtos.Requests;
-using FileUploaderDocspider.Dtos.Responses;
-using FileUploaderDocspider.Models;
+﻿using FileUploaderDocspider.Models;
+using FileUploaderDocspider.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,20 +8,17 @@ namespace FileUploaderDocspider.Mappings
 {
     public static class MappingExtensions
     {
-        public static Document ToDomain(this DocumentRequest request)
+        public static Document ToDomain(this DocumentCreateViewModel viewModel)
             => new Document
             {
-                Title = request.Title,
-                Description = request.Description,
-                FileName = request.FileName,
-                FilePath = request.FilePath,
-                FileSize = request.FileSize,
-                ContentType = request.ContentType,
+                Title = viewModel.Title,
+                Description = viewModel.Description,
+                FileName = viewModel.File?.FileName,
                 CreatedAt = DateTime.Now
             };
 
-        public static DocumentResponse ToResponse(this Document document)
-            => new DocumentResponse
+        public static DocumentViewModel ToViewModel(this Document document)
+            => new DocumentViewModel
             {
                 Id = document.Id,
                 Title = document.Title,
@@ -34,31 +30,13 @@ namespace FileUploaderDocspider.Mappings
                 ContentType = document.ContentType
             };
 
-        public static IEnumerable<DocumentResponse> ToResponse(this IEnumerable<Document> documents)
-        {
-            return documents.Select(document =>
-                new DocumentResponse
-                {
-                    Id = document.Id,
-                    Title = document.Title,
-                    Description = document.Description,
-                    FileName = document.FileName,
-                    FilePath = document.FilePath,
-                    CreatedAt = document.CreatedAt,
-                    FileSize = document.FileSize,
-                    ContentType = document.ContentType
-                });
-        }
+        public static IEnumerable<DocumentViewModel> ToViewModel(this IEnumerable<Document> documents)
+            => documents.Select(d => d.ToViewModel());
 
-        public static Document UpdateFromRequest(this Document document, DocumentRequest request)
+        public static Document UpdateFromViewModel(this Document document, DocumentEditViewModel viewModel)
         {
-            document.Title = request.Title;
-            document.Description = request.Description;
-            document.FileName = request.FileName;
-            document.FilePath = request.FilePath;
-            document.FileSize = request.FileSize;
-            document.ContentType = request.ContentType;
-
+            document.Title = viewModel.Title;
+            document.Description = viewModel.Description;
             return document;
         }
     }

@@ -1,7 +1,7 @@
 ﻿using FileUploaderDocspider.Interfaces;
-using FileUploaderDocspider.Models;
 using FileUploaderDocspider.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -26,7 +26,7 @@ namespace FileUploaderDocspider.Controllers
             if (!result.IsSuccess)
             {
                 TempData["Error"] = result.Message;
-                return View(new System.Collections.Generic.List<Document>());
+                return View(new List<DocumentViewModel>());
             }
             return View(result.Data);
         }
@@ -59,11 +59,11 @@ namespace FileUploaderDocspider.Controllers
         /// <summary>
         /// Creates a new document.
         /// </summary>
-        /// <param name="model">The document view model.</param>
+        /// <param name="model">The document create view model.</param>
         /// <returns>Redirects to Index on success or returns the view with errors.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(DocumentViewModel model)
+        public async Task<IActionResult> Create(DocumentCreateViewModel model)
         {
             if (ModelState.IsValid)
             {

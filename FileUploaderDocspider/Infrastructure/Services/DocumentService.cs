@@ -1,9 +1,7 @@
 ﻿using FileUploaderDocspider.Interfaces;
-using FileUploaderDocspider.Models;
-using FileUploaderDocspider.Dtos.Requests;
-using FileUploaderDocspider.Dtos.Responses;
 using FileUploaderDocspider.Mappings;
 using FileUploaderDocspider.Shared;
+using FileUploaderDocspider.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -26,99 +24,99 @@ namespace FileUploaderDocspider.Infrastructure.Services
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<Result<IEnumerable<DocumentResponse>>> GetAllDocumentsAsync()
+        public async Task<Result<IEnumerable<DocumentViewModel>>> GetAllDocumentsAsync()
         {
             try
             {
                 var documents = await _documentRepository.GetAllAsync();
-                var responses = documents.ToResponse();
-                return Result<IEnumerable<DocumentResponse>>.Success(responses);
+                var viewModels = documents.ToViewModel();
+                return Result<IEnumerable<DocumentViewModel>>.Success(viewModels);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<DocumentResponse>>.Failure($"Erro ao buscar documentos: {ex.Message}");
+                return Result<IEnumerable<DocumentViewModel>>.Failure($"Erro ao buscar documentos: {ex.Message}");
             }
         }
 
-        public async Task<Result<DocumentResponse>> GetDocumentByIdAsync(int id)
+        public async Task<Result<DocumentViewModel>> GetDocumentByIdAsync(int id)
         {
             try
             {
                 var document = await _documentRepository.GetByIdAsync(id);
                 if (document == null)
-                    return Result<DocumentResponse>.Failure("Documento não encontrado.");
+                    return Result<DocumentViewModel>.Failure("Documento não encontrado.");
 
-                return Result<DocumentResponse>.Success(document.ToResponse());
+                return Result<DocumentViewModel>.Success(document.ToViewModel());
             }
             catch (Exception ex)
             {
-                return Result<DocumentResponse>.Failure($"Erro ao buscar documento: {ex.Message}");
+                return Result<DocumentViewModel>.Failure($"Erro ao buscar documento: {ex.Message}");
             }
         }
 
-        public async Task<Result<DocumentResponse>> CreateDocumentAsync(DocumentRequest request, IFormFile file)
+        public async Task<Result<DocumentViewModel>> CreateDocumentAsync(DocumentCreateViewModel model)
         {
             try
             {
-                if (await _documentRepository.ExistsByTitleAsync(request.Title))
-                    return Result<DocumentResponse>.Failure("Já existe um documento com este título.");
+                if (await _documentRepository.ExistsByTitleAsync(model.Title))
+                    return Result<DocumentViewModel>.Failure("Já existe um documento com este título.");
 
-                var validationResult = ValidateFileAsync(file);
+                var validationResult = ValidateFile(model.File);
                 if (!validationResult.IsSuccess)
-                    return Result<DocumentResponse>.Failure(validationResult.Message);
+                    return Result<DocumentViewModel>.Failure(validationResult.Message);
 
-                var fileName = await SaveFileAsync(file);
+                var fileName = await SaveFileAsync(model.File);
 
-                var document = request.ToDomain();
-                document.FileName = file.FileName;
+                var document = model.ToDomain();
+                document.FileName = model.File.FileName;
                 document.FilePath = fileName;
-                document.FileSize = file.Length;
-                document.ContentType = file.ContentType;
+                document.FileSize = model.File.Length;
+                document.ContentType = model.File.ContentType;
                 document.CreatedAt = DateTime.Now;
 
                 var createdDocument = await _documentRepository.CreateAsync(document);
-                return Result<DocumentResponse>.Success(createdDocument.ToResponse());
+                return Result<DocumentViewModel>.Success(createdDocument.ToViewModel());
             }
             catch (Exception ex)
             {
-                return Result<DocumentResponse>.Failure($"Erro ao criar documento: {ex.Message}");
+                return Result<DocumentViewModel>.Failure($"Erro ao criar documento: {ex.Message}");
             }
         }
 
-        public async Task<Result<DocumentResponse>> UpdateDocumentAsync(int id, DocumentRequest request, IFormFile file)
+        public async Task<Result<DocumentViewModel>> UpdateDocumentAsync(DocumentEditViewModel model)
         {
             try
             {
-                var document = await _documentRepository.GetByIdAsync(id);
+                var document = await _documentRepository.GetByIdAsync(model.Id);
                 if (document == null)
-                    return Result<DocumentResponse>.Failure("Documento não encontrado.");
+                    return Result<DocumentViewModel>.Failure("Documento não encontrado.");
 
-                if (await _documentRepository.ExistsByTitleAsync(request.Title, id))
-                    return Result<DocumentResponse>.Failure("Já existe um documento com este título.");
+                if (await _documentRepository.ExistsByTitleAsync(model.Title, model.Id))
+                    return Result<DocumentViewModel>.Failure("Já existe um documento com este título.");
 
-                document.UpdateFromRequest(request);
+                document.UpdateFromViewModel(model);
 
-                if (file != null)
+                if (model.File != null)
                 {
-                    var validationResult = ValidateFileAsync(file);
+                    var validationResult = ValidateFile(model.File);
                     if (!validationResult.IsSuccess)
-                        return Result<DocumentResponse>.Failure(validationResult.Message);
+                        return Result<DocumentViewModel>.Failure(validationResult.Message);
 
                     DeleteFile(document.FilePath);
 
-                    var fileName = await SaveFileAsync(file);
-                    document.FileName = file.FileName;
+                    var fileName = await SaveFileAsync(model.File);
+                    document.FileName = model.File.FileName;
                     document.FilePath = fileName;
-                    document.FileSize = file.Length;
-                    document.ContentType = file.ContentType;
+                    document.FileSize = model.File.Length;
+                    document.ContentType = model.File.ContentType;
                 }
 
                 var updatedDocument = await _documentRepository.UpdateAsync(document);
-                return Result<DocumentResponse>.Success(updatedDocument.ToResponse());
+                return Result<DocumentViewModel>.Success(updatedDocument.ToViewModel());
             }
             catch (Exception ex)
             {
-                return Result<DocumentResponse>.Failure($"Erro ao atualizar documento: {ex.Message}");
+                return Result<DocumentViewModel>.Failure($"Erro ao atualizar documento: {ex.Message}");
             }
         }
 
@@ -141,7 +139,7 @@ namespace FileUploaderDocspider.Infrastructure.Services
             }
         }
 
-        public Result<bool> ValidateFileAsync(IFormFile file)
+        private Result<bool> ValidateFile(IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return Result<bool>.Failure("Arquivo é obrigatório.");
