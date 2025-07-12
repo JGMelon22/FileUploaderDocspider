@@ -23,4 +23,9 @@
 		<Folder Include="wwwroot/uploads/" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\FileUploaderDocspider.Application\FileUploaderDocspider.Application.csproj" />
+	  <ProjectReference Include="..\FileUploaderDocspider.Infrastructure\FileUploaderDocspider.Infrastructure.csproj" />
+	</ItemGroup>
+
 </Project>

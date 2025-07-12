@@ -1,6 +1,6 @@
-﻿using FileUploaderDocspider.Core.Domains.ViewModels;
+﻿using FileUploaderDocspider.Core.Domains.Mappings;
+using FileUploaderDocspider.Core.Domains.ViewModels;
 using FileUploaderDocspider.Core.Shared;
-using FileUploaderDocspider.Core.Domains.Mappings;
 using FileUploaderDocspider.Infrastructure.Interfaces.Repositories;
 using FileUploaderDocspider.Infrastructure.Interfaces.Services;
 using Microsoft.Extensions.Logging;

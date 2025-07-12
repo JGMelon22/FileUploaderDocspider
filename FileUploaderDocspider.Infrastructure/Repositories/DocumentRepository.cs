@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileUploaderDocspider.Infrastructure.Repository
+namespace FileUploaderDocspider.Infrastructure.Repositories
 {
     public class DocumentRepository : IDocumentRepository
     {

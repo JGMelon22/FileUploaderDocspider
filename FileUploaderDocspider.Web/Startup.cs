@@ -1,13 +1,12 @@
 using FileUploaderDocspider.Infrastructure.Data;
-using FileUploaderDocspider.Infrastructure.Repository;
-using FileUploaderDocspider.Infrastructure.Services;
-using FileUploaderDocspider.Interfaces;
+using FileUploaderDocspider.Web.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetDevPack.SimpleMediator;
 
 namespace FileUploaderDocspider
 {
@@ -23,12 +22,14 @@ namespace FileUploaderDocspider
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IMediator, Mediator>();
+
             services.AddControllersWithViews();
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("Default")));
 
-            services.AddScoped<IDocumentRepository, DocumentRepository>();
-            services.AddScoped<IDocumentService, DocumentService>();
+            services.AddServices();
+            services.AddRepositories();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FileUploaderDocspider.Application.Queries.Handlers
 {
-    public class GetAllDocumentsQueryHandler : IRequestHandler<GetDocumentByIdQuery, Result<IEnumerable<DocumentViewModel>>>
+    public class GetAllDocumentsQueryHandler : IRequestHandler<GetAllDocumentsQuery, Result<IEnumerable<DocumentViewModel>>>
     {
         private readonly IDocumentRepository _documentRepository;
         private readonly ILogger<GetAllDocumentsQueryHandler> _logger;
@@ -23,7 +23,7 @@ namespace FileUploaderDocspider.Application.Queries.Handlers
             _logger = logger;
         }
 
-        public async Task<Result<IEnumerable<DocumentViewModel>>> Handle(GetDocumentByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<DocumentViewModel>>> Handle(GetAllDocumentsQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Starting retrieval of all documents");
 

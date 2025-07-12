@@ -1,12 +1,12 @@
-﻿using FileUploaderDocspider.Core.Domains.ViewModels;
+﻿using FileUploaderDocspider.Core.Domains.Mappings;
+using FileUploaderDocspider.Core.Domains.ViewModels;
 using FileUploaderDocspider.Core.Shared;
-using FileUploaderDocspider.Core.Domains.Mappings;
 using FileUploaderDocspider.Infrastructure.Interfaces.Repositories;
+using Microsoft.Extensions.Logging;
 using NetDevPack.SimpleMediator;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace FileUploaderDocspider.Application.Queries.Handlers
 {
