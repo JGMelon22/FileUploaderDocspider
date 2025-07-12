@@ -4,7 +4,7 @@ namespace FileUploaderDocspider.Core.Shared
     {
         public T Data { get; }
         public bool IsSuccess { get; }
-        public string Message { get; }
+        public string Message { get; } = string.Empty;
 
         public Result()
         {

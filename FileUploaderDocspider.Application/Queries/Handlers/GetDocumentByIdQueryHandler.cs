@@ -29,6 +29,7 @@ namespace FileUploaderDocspider.Application.Queries.Handlers
                 if (document == null)
                 {
                     _logger.LogWarning("Document not found with ID: {DocumentId}", request.Id);
+                    return Result<DocumentViewModel>.Failure($"Document with Id {request.Id} not found!");
                 }
 
                 return Result<DocumentViewModel>.Success(document.ToViewModel());
