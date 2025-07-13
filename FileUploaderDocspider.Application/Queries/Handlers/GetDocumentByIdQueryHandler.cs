@@ -23,6 +23,8 @@ namespace FileUploaderDocspider.Application.Queries.Handlers
 
         public async Task<Result<DocumentViewModel>> Handle(GetDocumentByIdQuery request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Retrieving document by ID: {DocumentId}", request.Id);
+
             try
             {
                 var document = await _documentRepository.GetByIdAsync(request.Id);
@@ -32,10 +34,12 @@ namespace FileUploaderDocspider.Application.Queries.Handlers
                     return Result<DocumentViewModel>.Failure($"Document with Id {request.Id} not found!");
                 }
 
+                _logger.LogInformation("Document retrieved successfully: {DocumentId} - {Title}", document.Id, document.Title);
                 return Result<DocumentViewModel>.Success(document.ToViewModel());
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error retrieving document by ID: {DocumentId}", request.Id);
                 return Result<DocumentViewModel>.Failure($"Erro ao buscar documento: {ex.Message}");
             }
         }

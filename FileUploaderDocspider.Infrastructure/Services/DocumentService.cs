@@ -1,7 +1,6 @@
 ﻿using FileUploaderDocspider.Infrastructure.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Linq;
@@ -12,13 +11,11 @@ namespace FileUploaderDocspider.Infrastructure.Services
     public class DocumentService : IDocumentService
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly ILogger<DocumentService> _logger;
         private readonly string[] _blockedExtensions = { ".exe", ".zip", ".bat" };
 
-        public DocumentService(IWebHostEnvironment webHostEnvironment, ILogger<DocumentService> logger)
+        public DocumentService(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
-            _logger = logger;
         }
 
         public bool ValidateFile(IFormFile file, out string error)
