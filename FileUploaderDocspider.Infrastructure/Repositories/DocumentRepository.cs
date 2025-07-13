@@ -3,6 +3,7 @@ using FileUploaderDocspider.Infrastructure.Data;
 using FileUploaderDocspider.Infrastructure.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,16 +25,22 @@ namespace FileUploaderDocspider.Infrastructure.Repositories
         {
             _logger.LogInformation("Creating a new document: {Title}", document.Title);
 
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
             try
             {
                 _dbContext.Documents.Add(document);
                 await _dbContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
 
                 _logger.LogInformation("Document created successfully with ID: {DocumentId}", document.Id);
                 return document;
             }
             catch (System.Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 _logger.LogError(ex, "Failed to create document: {Title}", document.Title);
                 throw;
             }
@@ -42,6 +49,8 @@ namespace FileUploaderDocspider.Infrastructure.Repositories
         public async Task<bool> DeleteAsync(int id)
         {
             _logger.LogInformation("Deleting document with ID: {DocumentId}", id);
+
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
             try
             {
@@ -55,11 +64,15 @@ namespace FileUploaderDocspider.Infrastructure.Repositories
                 _dbContext.Documents.Remove(document);
                 await _dbContext.SaveChangesAsync();
 
+                await transaction.CommitAsync();
+
                 _logger.LogInformation("Document with ID {DocumentId} deleted successfully", id);
                 return true;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 _logger.LogError(ex, "Error deleting document with ID: {DocumentId}", id);
                 throw;
             }
@@ -137,16 +150,23 @@ namespace FileUploaderDocspider.Infrastructure.Repositories
         {
             _logger.LogInformation("Updating document with ID: {DocumentId}", document.Id);
 
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
             try
             {
                 _dbContext.Documents.Update(document);
                 await _dbContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
 
                 _logger.LogInformation("Document with ID {DocumentId} updated successfully", document.Id);
                 return document;
             }
             catch (System.Exception ex)
             {
+
+                await transaction.RollbackAsync();
+
                 _logger.LogError(ex, "Error updating document with ID: {DocumentId}", document.Id);
                 throw;
             }
