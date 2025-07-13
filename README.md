@@ -27,23 +27,30 @@ A aplicação desenvolvida tem como objetivo realizar o **upload de documentos**
 
 ### 📸 Project Preview
 
-**Início**  
-![Início](https://github.com/user-attachments/assets/595d3c3c-8f80-4160-ab9b-bdea338ab3d2)
+<strong>Início</strong><br>
+<img src="https://github.com/user-attachments/assets/595d3c3c-8f80-4160-ab9b-bdea338ab3d2" style="max-width: 90%; height: auto;">
 
-**Sobre**  
-![Sobre](https://github.com/user-attachments/assets/a019fd5a-ee3a-4132-b77b-408392a8292c)
+<strong>Sobre</strong><br>
+<img src="https://github.com/user-attachments/assets/a019fd5a-ee3a-4132-b77b-408392a8292c" style="max-width: 90%; height: auto;">
 
-**Meus Documentos**  
-![Meus Documentos](https://github.com/user-attachments/assets/ebddca8a-43db-459b-b895-9ea60d1aaa99)
+<strong>Meus Documentos</strong><br>
+<img src="https://github.com/user-attachments/assets/ebddca8a-43db-459b-b895-9ea60d1aaa99" style="max-width: 90%; height: auto;">
 
-**Detalhes**  
-![Detalhes](https://github.com/user-attachments/assets/e2e92d66-2b9a-4e7c-9775-30c24a07b9c6)
+<strong>Detalhes</strong><br>
+<img src="https://github.com/user-attachments/assets/e2e92d66-2b9a-4e7c-9775-30c24a07b9c6" style="max-width: 90%; height: auto;">
 
-**Editar**  
-![Editar](https://github.com/user-attachments/assets/69d4e45a-f0b7-46fb-9cfd-253c15e579c1)
+<strong>Editar</strong><br>
+<img src="https://github.com/user-attachments/assets/69d4e45a-f0b7-46fb-9cfd-253c15e579c1" style="max-width: 90%; height: auto;">
 
-**Deletar**  
-![Deletar](https://github.com/user-attachments/assets/9b337a4c-d1b9-4ded-89bd-2ce32c9b7dd0)
+<strong>Deletar</strong><br>
+<img src="https://github.com/user-attachments/assets/9b337a4c-d1b9-4ded-89bd-2ce32c9b7dd0" style="max-width: 100%; height: auto;">
+
+---
+
+### 🗺️ Diagrama do projeto
+
+<img src="https://github.com/user-attachments/assets/9bab6473-9041-4a18-abba-435c52e994b6" alt="diagram" style="max-width: 80%; height: auto;">
+<sub><em>Diagrama criado com <a href="https://github.com/ahmedkhaleel2004/gitdiagram" target="_blank">GitDiagram</a></em></sub>
 
 ---
 
