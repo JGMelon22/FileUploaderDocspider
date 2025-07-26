@@ -44,5 +44,15 @@ namespace FileUploaderDocspider.Core.Domains.Mappings
                 : viewModel.FileName;
             return document;
         }
+
+        public static DownloadDocumentResult ToDownloadDocumentResult(this Document document, byte[] fileBytes)
+        {
+            return new DownloadDocumentResult
+            {
+                FileBytes = fileBytes,
+                ContentType = document.ContentType,
+                FileName = document.FileName
+            };
+        }
     }
 }

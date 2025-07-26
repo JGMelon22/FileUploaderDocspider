@@ -152,21 +152,15 @@ namespace FileUploaderDocspider.Controllers
         /// </summary>
         /// <param name="id">The document ID.</param>
         /// <returns>The file for download or NotFound if not found.</returns>
+        [HttpGet("download")]
         public async Task<IActionResult> Download(int id)
         {
-            var result = await _mediator.Send(new GetDocumentByIdQuery(id));
+            var result = await _mediator.Send(new DownloadDocumentQuery(id));
             if (!result.IsSuccess || result.Data == null)
-            {
                 return NotFound();
-            }
-            var document = result.Data;
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", document.FilePath);
-            if (!System.IO.File.Exists(filePath))
-            {
-                return NotFound();
-            }
-            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-            return File(fileBytes, document.ContentType, document.FileName);
+
+            var doc = result.Data;
+            return File(doc.FileBytes, doc.ContentType, doc.FileName);
         }
     }
 }

@@ -27,6 +27,7 @@ namespace FileUploaderDocspider.Web.Extensions
             services.AddTransient<IRequestHandler<CreateDocumentCommand, Result<DocumentViewModel>>, CreateDocumentCommandHandler>();
             services.AddTransient<IRequestHandler<UpdateDocumentCommand, Result<DocumentViewModel>>, UpdateDocumentCommandHandler>();
             services.AddTransient<IRequestHandler<DeleteDocumentCommand, Result<bool>>, DeleteDocumentCommandHandler>();
+            services.AddTransient<IRequestHandler<DownloadDocumentQuery, Result<DownloadDocumentResult>>, DownloadDocumentQueryHandler>();
 
             return services;
         }
