@@ -14,7 +14,6 @@ using Xunit;
 
 namespace FileUploaderDocspider.Web.UnitTests.Controllers.Document
 {
-
     public class DocumentControllerTests
     {
         private readonly Mock<IMediator> _mediatorMock;
@@ -194,15 +193,49 @@ namespace FileUploaderDocspider.Web.UnitTests.Controllers.Document
         }
 
         [Fact]
+        public async Task Should_ReturnFileResult_When_DownloadDocumentSuccess()
+        {
+            // Arrange
+            var documentId = 1;
+            var fileBytes = new byte[] { 1, 2, 3 };
+            var fileName = "test.txt";
+            var contentType = "text/plain";
+            var downloadResult = new DownloadDocumentResult
+            {
+                FileBytes = fileBytes,
+                FileName = fileName,
+                ContentType = contentType
+            };
+            var response = Result<DownloadDocumentResult>.Success(downloadResult);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<DownloadDocumentQuery>(q => q.Id == documentId), default))
+                .ReturnsAsync(response);
+
+            var query = new DownloadDocumentQuery(documentId);
+
+            // Act
+            var result = await _controller.Download(documentId);
+
+            // Assert
+            var fileResult = Assert.IsType<FileContentResult>(result);
+            Assert.Equal(fileBytes, fileResult.FileContents);
+            Assert.Equal(contentType, fileResult.ContentType);
+            Assert.Equal(fileName, fileResult.FileDownloadName);
+        }
+
+        [Fact]
         public async Task Should_ReturnNotFound_When_DownloadDocumentNotFound()
         {
             // Arrange
-            var response = Result<DocumentViewModel>.Failure("Not found");
-            _mediatorMock.Setup(m => m.Send(It.IsAny<GetDocumentByIdQuery>(), default))
+            var documentId = 2;
+            var response = Result<DownloadDocumentResult>.Failure("Not found");
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<DownloadDocumentQuery>(q => q.Id == documentId), default))
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.Download(1);
+            var result = await _controller.Download(documentId);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
