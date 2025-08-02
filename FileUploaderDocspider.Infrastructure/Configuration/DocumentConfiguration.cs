@@ -45,8 +45,10 @@ namespace FileUploaderDocspider.Infrastructure.Configuration
                     .HasColumnName("content_type");
 
                 builder.HasIndex(e => e.Title)
-                    .IsUnique()
-                    .HasName("ux_documents_title");
+                    .HasDatabaseName("ux_documents_title");
+                //    builder.HasIndex(e => e.Title)
+                //        .IsUnique()
+                //        .HasName("ux_documents_title");
             }
         }
     }
